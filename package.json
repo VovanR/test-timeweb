@@ -22,8 +22,8 @@
     "redux-thunk": "^2.2.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "REACT_APP_HOST=http://localhost:3000/ react-scripts start",
+    "build": "REACT_APP_HOST=https://vovanr.com/test-timeweb/ react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",

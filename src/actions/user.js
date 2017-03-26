@@ -10,7 +10,7 @@ const params = [
   },
   {
     name: 'redirect_uri',
-    value: encodeURIComponent('http://localhost:3000/')
+    value: encodeURIComponent(process.env.REACT_APP_HOST)
   },
   {
     name: 'display',
