@@ -1,15 +1,10 @@
-import queryString from 'query-string';
-
 import {
   AUTHORIZE_REQUEST,
   AUTHORIZE_SUCCESS,
   AUTHORIZE_FAILURE
 } from '../actions/user';
 
-const parsed = queryString.parse(location.hash);
-const initialState = {
-  ...parsed
-};
+const initialState = {isLoading: true};
 
 export default function user(state = initialState, action) {
   switch (action.type) {

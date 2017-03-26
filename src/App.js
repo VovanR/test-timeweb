@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {authorize} from './actions/user';
+import {authorize, getLoginStatus} from './actions/user';
 import {getPhotos, setActivePhoto} from './actions/photos';
 import {Button, Grid, Row, Col} from 'react-bootstrap';
 import AuthorizePanel from './components/AuthorizePanel';
@@ -17,12 +17,16 @@ class App extends Component {
     this.handleClickPhotoPreview = this.handleClickPhotoPreview.bind(this);
   }
 
+  componentWillMount() {
+    this.props.onGetLoginStatus();
+  }
+
   handleClickAuthorize() {
     this.props.onClickAutorize();
   }
 
   handleClickGetPhotos() {
-    this.props.onClickGetPhotos(this.props.user.access_token);
+    this.props.onClickGetPhotos();
   }
 
   handleClickPhotoPreview(photoSrc) {
@@ -35,13 +39,17 @@ class App extends Component {
       photos
     } = this.props;
 
+    if (user.isLoading) {
+      return null;
+    }
+
     return (
       <div className="app">
         {photos.active ? (
           <ActivePhotoPanel src={photos.active}/>
         ) : null}
 
-        {user.access_token ? (
+        {user.session ? (
           <div>
             {photos && photos.data ? (
               <Grid>
@@ -95,12 +103,16 @@ export default connect(
       dispatch(authorize());
     },
 
-    onClickGetPhotos: accessToken => {
-      dispatch(getPhotos(accessToken));
+    onClickGetPhotos: () => {
+      dispatch(getPhotos());
     },
 
     onClickSetActivePhoto: photoSrc => {
       dispatch(setActivePhoto(photoSrc));
+    },
+
+    onGetLoginStatus: () => {
+      dispatch(getLoginStatus());
     }
   })
 )(App);

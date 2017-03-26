@@ -1,41 +1,51 @@
+/* global VK */
+
 export const AUTHORIZE_REQUEST = 'AUTHORIZE_REQUEST';
 export const AUTHORIZE_SUCCESS = 'AUTHORIZE_SUCCESS';
 export const AUTHORIZE_FAILURE = 'AUTHORIZE_FAILURE';
 
-const VK_API_URL = 'https://oauth.vk.com/authorize';
-const params = [
-  {
-    name: 'client_id',
-    value: '5948464'
-  },
-  {
-    name: 'redirect_uri',
-    value: encodeURIComponent(process.env.REACT_APP_HOST)
-  },
-  {
-    name: 'display',
-    value: 'popup'
-  },
-  {
-    name: 'scope',
-    value: '+4'
-  },
-  {
-    name: 'response_type',
-    value: 'token'
-  },
-  {
-    name: 'v',
-    value: '5.63'
-  },
-];
-
 export const authorize = () => dispatch => {
   dispatch({type: AUTHORIZE_REQUEST});
 
-  let paramsString = params.reduce((a, b) => {
-    return `${a}${b.name}=${b.value}&`;
-  }, '?');
-  paramsString = paramsString.slice(0, -1);
-  window.location.href = `${VK_API_URL}${paramsString}`;
+  VK.Auth.login(response => {
+    switch (response.status) {
+      case 'connected': {
+        dispatch({
+          type: AUTHORIZE_SUCCESS,
+          payload: response
+        });
+        break;
+      }
+      default: {
+        dispatch({
+          type: AUTHORIZE_FAILURE,
+          payload: {error: true}
+        });
+        break;
+      }
+    }
+  }, 4);
+};
+
+export const getLoginStatus = () => dispatch => {
+  dispatch({type: AUTHORIZE_REQUEST});
+
+  VK.Auth.getLoginStatus(response => {
+    switch (response.status) {
+      case 'connected': {
+        dispatch({
+          type: AUTHORIZE_SUCCESS,
+          payload: response
+        });
+        break;
+      }
+      default: {
+        dispatch({
+          type: AUTHORIZE_FAILURE,
+          payload: {error: true}
+        });
+        break;
+      }
+    }
+  });
 };

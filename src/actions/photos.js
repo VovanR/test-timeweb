@@ -1,54 +1,40 @@
+/* global VK */
+
 export const GET_PHOTOS_REQUEST = 'GET_PHOTOS_REQUEST';
 export const GET_PHOTOS_SUCCESS = 'GET_PHOTOS_SUCCESS';
 export const GET_PHOTOS_FAILURE = 'GET_PHOTOS_FAILURE';
 export const SET_ACTIVE_PHOTO = 'SET_ACTIVE_PHOTO';
 
-const VK_API_URL = 'https://api.vk.com/method/';
 const VK_API_METHOD = 'photos.getAll';
 
-export const getPhotos = accessToken => dispatch => {
+export const getPhotos = () => dispatch => {
   dispatch({type: GET_PHOTOS_REQUEST});
 
-  const params = [
-    {
-      name: 'access_token',
-      value: accessToken
-    },
-    {
-      name: 'v',
-      value: '5.63'
-    },
-  ];
-  let paramsString = params.reduce((a, b) => {
-    return `${a}${b.name}=${b.value}&`;
-  }, '?');
-  paramsString = paramsString.slice(0, -1);
-  const request = new Request(`${VK_API_URL}${VK_API_METHOD}${paramsString}.json`);
-
-  fetch(request)
-    .then(response => response.json())
-    .then(processResponse)
-    .then(data => {
+  VK.Api.call(VK_API_METHOD, {}, response => {
+    if (response.response) {
       dispatch({
         type: GET_PHOTOS_SUCCESS,
-        payload: data
+        payload: processResponse(response.response)
       });
-    })
-    .catch(error => {
-      dispatch({
-        type: GET_PHOTOS_FAILURE,
-        payload: {error: error.message}
-      });
+      return;
+    }
+
+    dispatch({
+      type: GET_PHOTOS_FAILURE,
+      payload: {error: true}
     });
+  });
 };
 
 function processResponse(response) {
+  const [count, ...photos] = response;
+
   return {
-    count: response.count,
-    data: response.response.items.map(item => ({
-      id: item.id,
-      preview: item.photo_130,
-      photo: item.photo_2560,
+    count,
+    data: photos.map(item => ({
+      id: item.pid,
+      preview: item.src,
+      photo: item.src_xxxbig,
       text: item.text
     }))
   };
