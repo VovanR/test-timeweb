@@ -1,11 +1,12 @@
 {
   "name": "test-timeweb",
-  "private": true,
-  "version": "0.1.0",
   "description": "Тестовое задание для Timeweb",
+  "author": "Vladimir Rodkin <mail@vovanr.com> (http://vovanr.com/)",
+  "version": "0.1.0",
   "license": "MIT",
   "repository": "VovanR/test-timeweb",
   "homepage": "https://vovanr.github.io/test-timeweb",
+  "private": true,
   "dependencies": {
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
