@@ -1,6 +1,7 @@
 export const GET_PHOTOS_REQUEST = 'GET_PHOTOS_REQUEST';
 export const GET_PHOTOS_SUCCESS = 'GET_PHOTOS_SUCCESS';
 export const GET_PHOTOS_FAILURE = 'GET_PHOTOS_FAILURE';
+export const SET_ACTIVE_PHOTO = 'SET_ACTIVE_PHOTO';
 
 const VK_API_URL = 'https://api.vk.com/method/';
 const VK_API_METHOD = 'photos.getAll';
@@ -52,3 +53,12 @@ function processResponse(response) {
     }))
   };
 }
+
+export const setActivePhoto = photoSrc => dispatch => {
+  dispatch({
+    type: SET_ACTIVE_PHOTO,
+    payload: {
+      active: photoSrc
+    }
+  });
+};
